@@ -1,10 +1,16 @@
-import { registerUserRequestSchema } from "@user/usecase/register";
+import {
+  registerUserProvider,
+  registerUserRequestSchema,
+} from "@user/usecase/register";
 import bodyParser from "body-parser";
-import express, { Request, Response, NextFunction } from "express";
+import express from "express";
 import morgan from "morgan";
-import { ZodError } from "zod";
+import { errorMiddleware } from "./middlewares";
+import { InMemoryUserStore } from "@user/adapters/user_store/in_memory";
+import { sendUserDomainError } from "./client-error";
 
 export const main = () => {
+  const userStore = new InMemoryUserStore();
   const app = express();
 
   app.use(bodyParser.json());
@@ -16,27 +22,18 @@ export const main = () => {
     res.status(400).send();
   });
 
-  app.post("/api/auth/register", (req, res) => {
-    const registerRequest = registerUserRequestSchema.parse(req.body);
-    res.sendStatus(200);
-  });
-
-  app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
-    if (err instanceof ZodError) {
-      res
-        .status(400)
-        .send({
-          tag: "ValidationError",
-          message: "Failed to validate",
-          fields: err.message,
-        });
+  app.post("/api/auth/register", async (req, res) => {
+    const registrationRequest = registerUserRequestSchema.parse(req.body);
+    const registerUser = registerUserProvider(userStore);
+    const result = await registerUser(registrationRequest);
+    if (result.ok) {
+      res.status(200).send();
     } else {
-      res.status(500).send({
-        tag: "Unknown Error",
-        message: "An internal error occurred, please try again.",
-      });
+      sendUserDomainError(res, result.error);
     }
   });
+
+  app.use(errorMiddleware);
 
   app.listen(3000);
 };
