@@ -1,10 +1,10 @@
 import { emailSchema, passwordSchema } from "@user/domain";
 import { UserStore } from "@user/ports";
 import { z } from "zod";
-import { InvalidEmailAndPasswordCombinationError } from "@user/error";
+import { InvalidEmailAndPasswordCombinationError, Result } from "@user/error";
 import { err } from "@common/result";
-import { addDays, formatDate } from "date-fns";
-import { ok } from "assert";
+import { addDays } from "date-fns";
+import { ok } from "@common/result";
 
 export const loginUserRequestSchema = z.object({
   email: emailSchema,
@@ -13,10 +13,12 @@ export const loginUserRequestSchema = z.object({
 
 export type LoginUserRequest = z.infer<typeof loginUserRequestSchema>;
 
-export const loginUserResponseSchema = z.object({
+const loginUserResponseSchema = z.object({
   accessToken: z.string(),
   accessTokenExpirationDate: z.coerce.date(),
 });
+
+export type LoginUserResponse = z.infer<typeof loginUserResponseSchema>;
 
 export const loginUserProvider =
   (store: UserStore) =>

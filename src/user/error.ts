@@ -26,9 +26,19 @@ export class InvalidEmailAndPasswordCombinationError extends Error {
   }
 }
 
+export class UserNotFoundError extends Error {
+  email: string;
+  constructor(email: string) {
+    super(`user not found. email: ${email}`);
+
+    this.email = email;
+  }
+}
+
 export type Error =
   | UnexpectedError
   | EmailAlreadyInUseError
-  | InvalidEmailAndPasswordCombinationError;
+  | InvalidEmailAndPasswordCombinationError
+  | UserNotFoundError;
 
 export type Result<T> = BaseResult<T, Error>;

@@ -1,4 +1,9 @@
-import { EmailAlreadyInUseError, Error as UserError } from "@user/error";
+import {
+  EmailAlreadyInUseError,
+  InvalidEmailAndPasswordCombinationError,
+  Error as UserError,
+  UserNotFoundError,
+} from "@user/error";
 import { Response } from "express";
 import { ZodError } from "zod";
 
@@ -46,6 +51,25 @@ export const fromUserDomainError = (error: UserError) => {
       httpStatus: 409,
       tag: "EmailAlreadyInUseError",
       message: "The email address is already in use",
+    } satisfies ClientError;
+  }
+
+  if (error instanceof InvalidEmailAndPasswordCombinationError) {
+    return {
+      httpStatus: 400,
+      tag: "InvalidEmailAndPasswordCombinationError",
+      message: "The email and password combination is incorrect.",
+    } satisfies ClientError;
+  }
+
+  if (error instanceof UserNotFoundError) {
+    return {
+      httpStatus: 400,
+      tag: "UserNotFoundError",
+      message: "This user does not exist.",
+      data: {
+        email: error.email,
+      },
     } satisfies ClientError;
   }
 

@@ -9,11 +9,14 @@ import morgan from "morgan";
 import { errorMiddleware } from "./middlewares";
 import { InMemoryUserStore } from "@user/adapters/user_store/in_memory";
 import { sendUserDomainError } from "./client-error";
+import { loginUserProvider, loginUserRequestSchema } from "@user/usecase/login";
+import cookieParser from "cookie-parser";
 
 export const main = () => {
   const userStore = new InMemoryUserStore();
   const app = express();
 
+  app.use(cookieParser());
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -29,6 +32,24 @@ export const main = () => {
     const result = await registerUser(registrationRequest);
     if (result.ok) {
       res.status(200).send();
+    } else {
+      sendUserDomainError(res, result.error);
+    }
+  });
+
+  app.post("/api/auth/login", async (req, res) => {
+    const loginRequest = loginUserRequestSchema.parse(req.body);
+    const loginUser = loginUserProvider(userStore);
+    const result = await loginUser(loginRequest);
+    if (result.ok) {
+      res
+        .cookie("access-token", result.data.accessToken, {
+          expires: result.data.accessTokenExpirationDate,
+          httpOnly: true,
+          secure: true,
+        })
+        .status(200)
+        .send();
     } else {
       sendUserDomainError(res, result.error);
     }
