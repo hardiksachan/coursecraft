@@ -16,7 +16,7 @@ export const passwordSchema = z
   .string()
   .min(1, { message: "password must not be empty" })
   .max(20, { message: "password can not be more than 20 characters" })
-  .regex(new RegExp(PASSWORD_REGEX), {
+  .regex(PASSWORD_REGEX, {
     message:
       "password must contain a lowercase letter, an uppercase letter and a special character",
   });

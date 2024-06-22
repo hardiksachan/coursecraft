@@ -1,4 +1,5 @@
-const incrementorProvider = (a: number) => (x: number) => x + a;
+import "module-alias/register";
 
-const incrementByOne = incrementorProvider(1);
-console.log(incrementByOne(5));
+import { main } from "./rest";
+
+main();

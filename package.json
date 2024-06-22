@@ -17,6 +17,7 @@
     "body-parser": "^1.20.2",
     "express": "^4.19.2",
     "kysely": "^0.27.3",
+    "module-alias": "^2.2.3",
     "morgan": "^1.10.0",
     "pg": "^8.11.5",
     "zod": "^3.23.8"
@@ -37,5 +38,9 @@
     "rimraf": "^5.0.7",
     "ts-jest": "^29.1.2",
     "typescript": "^5.4.5"
+  },
+  "_moduleAliases": {
+    "@user": "dist/user",
+    "@common": "dist/common"
   }
 }

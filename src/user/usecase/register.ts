@@ -32,5 +32,5 @@ export const registerUserProvider =
       password,
     });
 
-    store.createUser(profile, credential);
+    return store.createUser(profile, credential);
   };
