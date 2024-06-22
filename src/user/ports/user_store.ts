@@ -4,4 +4,6 @@ import { Unit } from "@common/unit";
 
 export interface UserStore {
   createUser(profile: Profile, credential: Credential): Promise<Result<Unit>>;
+  getSavedCredentials(email: string): Promise<Result<Credential>>;
+  getProfileByEmail(email: string): Promise<Result<Profile>>;
 }

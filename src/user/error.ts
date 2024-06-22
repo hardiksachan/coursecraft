@@ -4,7 +4,7 @@ export class UnexpectedError extends Error {
   cause: Error;
 
   constructor(cause: Error) {
-    super("Unexpected Error");
+    super("unexpected error");
 
     this.cause = cause;
   }
@@ -14,12 +14,21 @@ export class EmailAlreadyInUseError extends Error {
   email: string;
 
   constructor(email: string) {
-    super(`Email Already in use. email: ${email}`);
+    super(`email already in use. email: ${email}`);
 
     this.email = email;
   }
 }
 
-export type Error = UnexpectedError | EmailAlreadyInUseError;
+export class InvalidEmailAndPasswordCombinationError extends Error {
+  constructor() {
+    super("invalid email and password combination.");
+  }
+}
+
+export type Error =
+  | UnexpectedError
+  | EmailAlreadyInUseError
+  | InvalidEmailAndPasswordCombinationError;
 
 export type Result<T> = BaseResult<T, Error>;

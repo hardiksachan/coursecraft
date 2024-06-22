@@ -11,6 +11,9 @@ importers:
       body-parser:
         specifier: ^1.20.2
         version: 1.20.2
+      date-fns:
+        specifier: ^3.6.0
+        version: 3.6.0
       express:
         specifier: ^4.19.2
         version: 4.19.2
@@ -45,6 +48,9 @@ importers:
       '@types/body-parser':
         specifier: ^1.19.5
         version: 1.19.5
+      '@types/date-fns':
+        specifier: ^2.6.0
+        version: 2.6.0
       '@types/express':
         specifier: ^4.17.21
         version: 4.17.21
@@ -393,6 +399,10 @@ packages:
   '@types/connect@3.4.38':
     resolution: {integrity: sha512-K6uROf1LD88uDQqJCktA4yzL1YYAK6NgfsI0v/mTgyPKWsX1CnJ0XPSDhViejru1GcRkLWb8RlzFYJRqGUbaug==}
 
+  '@types/date-fns@2.6.0':
+    resolution: {integrity: sha512-9DSw2ZRzV0Tmpa6PHHJbMcZn79HHus+BBBohcOaDzkK/G3zMjDUDYjJIWBFLbkh+1+/IOS0A59BpQfdr37hASg==}
+    deprecated: This is a stub types definition for date-fns (https://github.com/date-fns/date-fns). date-fns provides its own type definitions, so you don't need @types/date-fns installed!
+
   '@types/express-serve-static-core@4.19.5':
     resolution: {integrity: sha512-y6W03tvrACO72aijJ5uF02FRq5cgDR9lUxddQ8vyF+GvmjJQqbzDcJngEjURc+ZsG31VI3hODNZJ2URj86pzmg==}
 
@@ -668,6 +678,9 @@ packages:
   date-fns@2.30.0:
     resolution: {integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==}
     engines: {node: '>=0.11'}
+
+  date-fns@3.6.0:
+    resolution: {integrity: sha512-fRHTG8g/Gif+kSh50gaGEdToemgfj74aRX3swtiouboip5JDLAyDE9F11nHMIcvOaXeOC6D7SpNhi7uFyB7Uww==}
 
   debug@2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
@@ -2344,6 +2357,10 @@ snapshots:
     dependencies:
       '@types/node': 20.14.7
 
+  '@types/date-fns@2.6.0':
+    dependencies:
+      date-fns: 3.6.0
+
   '@types/express-serve-static-core@4.19.5':
     dependencies:
       '@types/node': 20.14.7
@@ -2682,6 +2699,8 @@ snapshots:
   date-fns@2.30.0:
     dependencies:
       '@babel/runtime': 7.24.7
+
+  date-fns@3.6.0: {}
 
   debug@2.6.9:
     dependencies:
