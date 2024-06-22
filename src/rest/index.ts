@@ -11,6 +11,7 @@ import { InMemoryUserStore } from "@user/adapters/user_store/in_memory";
 import { sendUserDomainError } from "./client-error";
 import { loginUserProvider, loginUserRequestSchema } from "@user/usecase/login";
 import cookieParser from "cookie-parser";
+import { config } from "@common/config";
 
 export const main = () => {
   const userStore = new InMemoryUserStore();
@@ -43,8 +44,8 @@ export const main = () => {
     const result = await loginUser(loginRequest);
     if (result.ok) {
       res
-        .cookie("access-token", result.data.accessToken, {
-          expires: result.data.accessTokenExpirationDate,
+        .cookie("access-token", result.data.accessToken.token, {
+          expires: result.data.accessToken.expirationDate,
           httpOnly: true,
           secure: true,
         })
@@ -57,5 +58,5 @@ export const main = () => {
 
   app.use(errorMiddleware);
 
-  app.listen(3000);
+  app.listen(config.PORT);
 };

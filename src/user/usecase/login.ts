@@ -5,6 +5,7 @@ import { InvalidEmailAndPasswordCombinationError, Result } from "@user/error";
 import { err } from "@common/result";
 import { addDays } from "date-fns";
 import { ok } from "@common/result";
+import { makeToken, tokenSchema } from "@common/token";
 
 export const loginUserRequestSchema = z.object({
   email: emailSchema,
@@ -14,8 +15,7 @@ export const loginUserRequestSchema = z.object({
 export type LoginUserRequest = z.infer<typeof loginUserRequestSchema>;
 
 const loginUserResponseSchema = z.object({
-  accessToken: z.string(),
-  accessTokenExpirationDate: z.coerce.date(),
+  accessToken: tokenSchema,
 });
 
 export type LoginUserResponse = z.infer<typeof loginUserResponseSchema>;
@@ -33,13 +33,14 @@ export const loginUserProvider =
     if (!profileResult.ok) return err(profileResult.error);
     const profile = profileResult.data;
 
-    const expirationDate = addDays(new Date(), 1); // TODO: set from config
-    const token = `user-${profile.userId}.${expirationDate.getTime()}`;
+    const accessToken = makeToken({
+      userId: profile.userId,
+      email: profile.email,
+    });
 
     return ok(
       loginUserResponseSchema.parse({
-        accessToken: token,
-        accessTokenExpirationDate: expirationDate,
+        accessToken,
       }),
     );
   };
