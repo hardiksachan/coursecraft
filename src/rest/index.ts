@@ -1,7 +1,8 @@
 import { registerUserRequestSchema } from "@user/usecase/register";
 import bodyParser from "body-parser";
-import express from "express";
+import express, { Request, Response, NextFunction } from "express";
 import morgan from "morgan";
+import { ZodError } from "zod";
 
 export const main = () => {
   const app = express();
@@ -16,10 +17,25 @@ export const main = () => {
   });
 
   app.post("/api/auth/register", (req, res) => {
-    console.log(req.body);
     const registerRequest = registerUserRequestSchema.parse(req.body);
-    console.log(registerRequest);
     res.sendStatus(200);
+  });
+
+  app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
+    if (err instanceof ZodError) {
+      res
+        .status(400)
+        .send({
+          tag: "ValidationError",
+          message: "Failed to validate",
+          fields: err.message,
+        });
+    } else {
+      res.status(500).send({
+        tag: "Unknown Error",
+        message: "An internal error occurred, please try again.",
+      });
+    }
   });
 
   app.listen(3000);
