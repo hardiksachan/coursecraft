@@ -19,7 +19,7 @@ export const main = () => {
   app.use(morgan("dev"));
 
   app.get("/health", (_, res) => {
-    res.status(400).send();
+    res.status(200).send();
   });
 
   app.post("/api/auth/register", async (req, res) => {

@@ -21,7 +21,7 @@ export const registerUserProvider =
   (store: UserStore) =>
   async ({ username, email, password }: RegisterUserRequest) => {
     const profile = profileSchema.parse({
-      id: uuidv7(),
+      userId: uuidv7(),
       username,
       email,
     });
