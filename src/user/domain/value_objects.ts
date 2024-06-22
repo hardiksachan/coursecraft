@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { PASSWORD_REGEX } from "../../common/constants";
+import { PASSWORD_REGEX } from "@common/constants";
 
 export const userIdSchema = z.string();
 
