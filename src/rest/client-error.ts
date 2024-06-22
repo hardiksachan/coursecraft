@@ -20,13 +20,25 @@ export const internalServerError = (message?: string) =>
     message: message || "An unexpected error occured",
   }) satisfies ClientError;
 
-export const validationError = (err: ZodError) =>
-  ({
+export const validationError = (err: ZodError) => {
+  let message = "Encountered some validation errors.";
+
+  if (err.issues && err.issues.length) {
+    message = "Encountered the following validation errors: ";
+    err.issues.forEach((issue) => {
+      const { path, message: issueMessage } = issue;
+      const fieldName = path.join(".");
+      message += `'${fieldName}': ${issueMessage} `;
+    });
+  }
+
+  return {
     httpStatus: 400,
     tag: "ValidationError",
-    message: "Failed to validate",
-    data: err.message,
-  }) satisfies ClientError;
+    message,
+    data: err.issues,
+  } satisfies ClientError;
+};
 
 export const fromUserDomainError = (error: UserError) => {
   if (error instanceof EmailAlreadyInUseError) {
@@ -39,6 +51,5 @@ export const fromUserDomainError = (error: UserError) => {
 
   return internalServerError();
 };
-
 export const sendUserDomainError = (res: Response, error: UserError) =>
   sendClientError(res, fromUserDomainError(error));

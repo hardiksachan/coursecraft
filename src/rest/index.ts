@@ -1,3 +1,4 @@
+import "express-async-errors";
 import {
   registerUserProvider,
   registerUserRequestSchema,

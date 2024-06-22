@@ -13,11 +13,7 @@ export class InMemoryUserStore implements UserStore {
     profile: Profile,
     credential: Credential,
   ): Promise<Result<Unit>> {
-    if (
-      this.users.find(({ email }) => {
-        email === profile.email;
-      })
-    ) {
+    if (this.users.find(({ email }) => email === profile.email)) {
       return err(new EmailAlreadyInUseError(profile.email));
     }
 
