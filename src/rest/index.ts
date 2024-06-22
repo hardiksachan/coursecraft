@@ -12,9 +12,11 @@ import { sendUserDomainError } from "./client-error";
 import { loginUserProvider, loginUserRequestSchema } from "@user/usecase/login";
 import cookieParser from "cookie-parser";
 import { config } from "@common/config";
+import { JWT } from "@common/token";
 
 export const main = () => {
   const userStore = new InMemoryUserStore();
+  const jwtTokenService = new JWT();
   const app = express();
 
   app.use(cookieParser());
@@ -40,7 +42,7 @@ export const main = () => {
 
   app.post("/api/auth/login", async (req, res) => {
     const loginRequest = loginUserRequestSchema.parse(req.body);
-    const loginUser = loginUserProvider(userStore);
+    const loginUser = loginUserProvider(userStore, jwtTokenService);
     const result = await loginUser(loginRequest);
     if (result.ok) {
       res

@@ -1,11 +1,10 @@
 import { emailSchema, passwordSchema } from "@user/domain";
 import { UserStore } from "@user/ports";
 import { z } from "zod";
-import { InvalidEmailAndPasswordCombinationError, Result } from "@user/error";
+import { InvalidEmailAndPasswordCombinationError } from "@user/error";
 import { err } from "@common/result";
-import { addDays } from "date-fns";
 import { ok } from "@common/result";
-import { makeToken, tokenSchema } from "@common/token";
+import { tokenSchema, TokenService } from "@common/token";
 
 export const loginUserRequestSchema = z.object({
   email: emailSchema,
@@ -21,7 +20,7 @@ const loginUserResponseSchema = z.object({
 export type LoginUserResponse = z.infer<typeof loginUserResponseSchema>;
 
 export const loginUserProvider =
-  (store: UserStore) =>
+  (store: UserStore, tokenService: TokenService) =>
   async ({ email, password }: LoginUserRequest) => {
     const savedCredentialsResult = await store.getSavedCredentials(email);
     if (!savedCredentialsResult.ok) return err(savedCredentialsResult.error);
@@ -33,7 +32,7 @@ export const loginUserProvider =
     if (!profileResult.ok) return err(profileResult.error);
     const profile = profileResult.data;
 
-    const accessToken = makeToken({
+    const accessToken = tokenService.makeToken({
       userId: profile.userId,
       email: profile.email,
     });
