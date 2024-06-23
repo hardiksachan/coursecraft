@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import {
-  insufficientPermission,
+  insufficientPermissions,
   sendClientError,
   unauthenticated,
 } from "../../rest/client-error";
@@ -19,6 +19,6 @@ export const requiresAuthPriviliges =
     if (req.ctx.user && req.ctx.user.role === "admin") {
       next();
     } else {
-      sendClientError(res, insufficientPermission());
+      sendClientError(res, insufficientPermissions());
     }
   };
