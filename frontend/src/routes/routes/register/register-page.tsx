@@ -18,13 +18,16 @@ import {
   registerUserRequestSchema,
   useRegisterUser,
 } from "../../../api/user-register";
+import { toast } from "sonner";
+import { useErrorNotification } from "../../../hooks/use-error-notification";
+import { useNotification } from "../../../hooks/use-notification";
 
 const registerFormSchema = registerUserRequestSchema.extend({
   confirmPassword: z.string(),
 });
 
-const RegistrationForm = () => {
-  const form = useForm<z.infer<typeof registerFormSchema>>({
+const useRegisterUserForm = () => {
+  return useForm({
     resolver: zodResolver(registerFormSchema),
     mode: "onBlur",
     defaultValues: {
@@ -34,14 +37,25 @@ const RegistrationForm = () => {
       confirmPassword: "",
     },
   });
+};
 
-  const { mutate, isPending } = useRegisterUser();
+const RegistrationForm = () => {
+  const form = useRegisterUserForm();
+
+  const mutation = useRegisterUser();
+
+  useErrorNotification(mutation, { title: "Registration failed" });
+  useNotification(mutation.isSuccess, () => {
+    toast.success("Registration successful", {
+      description: "You can now login to your account.",
+    });
+  });
 
   return (
     <Form {...form}>
       <form
         className="flex flex-col gap-y-2 min-w-2xl"
-        onSubmit={form.handleSubmit((data) => mutate(data))}
+        onSubmit={form.handleSubmit((data) => mutation.mutate(data))}
       >
         <FormField
           control={form.control}
@@ -105,7 +119,7 @@ const RegistrationForm = () => {
         />
 
         <div>
-          <Button isLoading={isPending} type="submit">
+          <Button isLoading={mutation.isPending} type="submit">
             Sign Up
           </Button>
         </div>
@@ -117,7 +131,7 @@ const RegistrationForm = () => {
 export const RegisterPage = () => {
   return (
     <div className="flex items-center justify-center min-h-screen">
-      <div className="min-w-[35vw] ">
+      <div className="w-[35vw] ">
         <div className="mb-2 space-y-1">
           <h1 className="text-3xl font-semibold text-start">Course Crafters</h1>
           <p className="text-xs text-start text-muted-foreground">
