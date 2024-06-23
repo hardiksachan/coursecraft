@@ -25,10 +25,17 @@ export const internalServerError = (message?: string) =>
     message: message || "An unexpected error occured",
   }) satisfies ClientError;
 
-export const noAuthError = () =>
+export const insufficientPermissions = () =>
   ({
     httpStatus: 401,
-    tag: "NoAuthError",
+    tag: "InsufficientPermission",
+    message: "you don't have permission to perform this action",
+  }) satisfies ClientError;
+
+export const unauthenticated = () =>
+  ({
+    httpStatus: 401,
+    tag: "Unauthenticated",
     message: "please log in to continue",
   }) satisfies ClientError;
 

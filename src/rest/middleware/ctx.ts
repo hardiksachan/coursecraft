@@ -10,13 +10,14 @@ export const contextResolver =
     const authClaims = tokenService.verifyToken(accessToken);
 
     if (authClaims.ok) {
-      const { userId, email } = authClaims.data;
+      const { userId, email, role } = authClaims.data;
 
       req.ctx = ctxSchema.parse({
         requestId: uuidv4(),
         user: {
           userId,
           email,
+          role,
         },
       });
     } else {

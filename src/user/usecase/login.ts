@@ -35,6 +35,7 @@ export const loginUserProvider =
     const accessToken = tokenService.makeToken({
       userId: profile.userId,
       email: profile.email,
+      role: profile.admin ? "admin" : "user",
     });
 
     return ok(

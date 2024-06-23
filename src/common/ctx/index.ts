@@ -6,6 +6,7 @@ export const ctxSchema = z.object({
     .object({
       userId: z.string(),
       email: z.string(),
+      role: z.enum(["admin", "user"]),
     })
     .optional(),
 });

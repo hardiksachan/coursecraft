@@ -4,6 +4,7 @@ import { Result } from "./error";
 export const claimsSchema = z.object({
   userId: z.string(),
   email: z.string().email(),
+  role: z.enum(["admin", "user"]),
 });
 
 export type Claims = z.infer<typeof claimsSchema>;
