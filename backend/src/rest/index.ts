@@ -19,7 +19,12 @@ export const main = () => {
 
   const app = express();
 
-  app.use(cors());
+  app.use(
+    cors({
+      origin: config.CORS_ORIGIN,
+      credentials: true,
+    })
+  );
 
   app.use(cookieParser());
   app.use(bodyParser.json());

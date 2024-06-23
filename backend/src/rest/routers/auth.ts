@@ -3,12 +3,13 @@ import {
   registerUserProvider,
   registerUserRequestSchema,
 } from "@user/usecase/register";
-import express from "express";
+import express, { CookieOptions } from "express";
 import { loginUserProvider, loginUserRequestSchema } from "@user/usecase/login";
 import { UserStore } from "@user/ports";
 import { TokenService } from "@common/token";
 import { sendUserDomainError } from "../client-error";
 import { ACCESS_TOKEN_COOKIE_KEY } from "@common/constants";
+import { config } from "@common/config";
 
 export const authRouter = (
   userStore: UserStore,
@@ -34,9 +35,8 @@ export const authRouter = (
     if (result.ok) {
       res
         .cookie(ACCESS_TOKEN_COOKIE_KEY, result.data.accessToken.token, {
+          ...cookieConfig(),
           expires: result.data.accessToken.expirationDate,
-          httpOnly: true,
-          secure: true,
         })
         .status(200)
         .send();
@@ -52,4 +52,23 @@ export const authRouter = (
   });
 
   return router;
+};
+
+const cookieConfig = (): Partial<CookieOptions> => {
+  if (config.NODE_ENV === "production") {
+    return {
+      httpOnly: true,
+      path: "/",
+      secure: true,
+      sameSite: "none",
+    };
+  } else {
+    return {
+      httpOnly: true,
+      path: "/",
+      domain: "localhost",
+      secure: false,
+      sameSite: "lax",
+    };
+  }
 };

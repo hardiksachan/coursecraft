@@ -10,6 +10,8 @@ const configSchema = z.object({
   ACCESS_TOKEN_SECRET: z.string().min(1),
   ACCESS_TOKEN_EXPIRATION_DURATION: z.string(),
   DATABASE_URL: z.string(),
+  NODE_ENV: z.string(),
+  CORS_ORIGIN: z.string().url(),
 });
 
 type Config = z.infer<typeof configSchema>;
