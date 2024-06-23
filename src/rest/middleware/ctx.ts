@@ -1,3 +1,4 @@
+import { ACCESS_TOKEN_COOKIE_KEY } from "@common/constants";
 import { ctxSchema } from "@common/ctx";
 import { TokenService } from "@common/token";
 import { NextFunction, Request, Response } from "express";
@@ -6,7 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 export const contextResolver =
   (tokenService: TokenService) =>
   (req: Request, _res: Response, next: NextFunction) => {
-    const accessToken = req.cookies["access-token"] || "";
+    const accessToken = req.cookies[ACCESS_TOKEN_COOKIE_KEY] || "";
     const authClaims = tokenService.verifyToken(accessToken);
 
     if (authClaims.ok) {
