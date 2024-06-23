@@ -89,4 +89,29 @@ export class PostgresUserStore implements UserStore {
       return err(new UnexpectedError(error));
     }
   }
+
+  async getProfile(userId: string): Promise<Result<Profile>> {
+    try {
+      const row = await db
+        .selectFrom("users")
+        .select(["username", "email", "admin"])
+        .where("user_id", "=", userId)
+        .executeTakeFirst();
+
+      if (!row) {
+        return err(new UserNotFoundError(userId));
+      }
+
+      const profile = profileSchema.parse({
+        userId,
+        username: row.username,
+        email: row.email,
+        admin: row.admin,
+      });
+      return ok(profile);
+    } catch (error: unknown) {
+      console.error("[PostgresUserStore.getProfile]", error);
+      return err(new UnexpectedError(error));
+    }
+  }
 }

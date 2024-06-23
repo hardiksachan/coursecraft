@@ -44,4 +44,13 @@ export class InMemoryUserStore implements UserStore {
 
     return ok(profileSchema.parse(row));
   }
+
+  async getProfile(userId: string): Promise<Result<Profile>> {
+    const row = this.users.find((row) => row.userId === userId);
+    if (!row) {
+      return err(new UserNotFoundError(userId));
+    }
+
+    return ok(profileSchema.parse(row));
+  }
 }
