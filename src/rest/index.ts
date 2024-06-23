@@ -9,9 +9,10 @@ import { config } from "@common/config";
 import { JWT } from "@common/token";
 import { authRouter, coursesRouter } from "./routers";
 import { InMemoryCourseStore } from "@course/adapters/course_store/in_memory";
+import { PostgresUserStore } from "@user/adapters/user_store/postgres";
 
 export const main = () => {
-  const userStore = new InMemoryUserStore();
+  const userStore = new PostgresUserStore();
   const jwtTokenService = new JWT();
 
   const coursesStore = new InMemoryCourseStore();

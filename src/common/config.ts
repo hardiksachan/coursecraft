@@ -9,6 +9,7 @@ const configSchema = z.object({
     ),
   ACCESS_TOKEN_SECRET: z.string().min(1),
   ACCESS_TOKEN_EXPIRATION_DURATION: z.string(),
+  DATABASE_URL: z.string(),
 });
 
 type Config = z.infer<typeof configSchema>;
