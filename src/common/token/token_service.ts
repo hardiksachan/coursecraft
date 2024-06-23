@@ -1,11 +1,12 @@
 import { z } from "zod";
+import { Result } from "./error";
 
-export const payloadSchema = z.object({
+export const claimsSchema = z.object({
   userId: z.string(),
   email: z.string().email(),
 });
 
-export type Payload = z.infer<typeof payloadSchema>;
+export type Claims = z.infer<typeof claimsSchema>;
 
 export const tokenSchema = z.object({
   token: z.string(),
@@ -15,5 +16,6 @@ export const tokenSchema = z.object({
 export type Token = z.infer<typeof tokenSchema>;
 
 export interface TokenService {
-  makeToken(payload: Payload): Token;
+  makeToken(payload: Claims): Token;
+  verifyToken(token: string): Result<Claims>;
 }

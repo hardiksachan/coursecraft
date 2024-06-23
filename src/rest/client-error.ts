@@ -25,6 +25,13 @@ export const internalServerError = (message?: string) =>
     message: message || "An unexpected error occured",
   }) satisfies ClientError;
 
+export const noAuthError = () =>
+  ({
+    httpStatus: 401,
+    tag: "NoAuthError",
+    message: "please log in to continue",
+  }) satisfies ClientError;
+
 export const validationError = (err: ZodError) => {
   let message = "Encountered some validation errors.";
 

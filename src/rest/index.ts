@@ -6,7 +6,7 @@ import {
 import bodyParser from "body-parser";
 import express from "express";
 import morgan from "morgan";
-import { errorMiddleware } from "./middleware";
+import { contextResolver, errorMiddleware, requiresAuth } from "./middleware";
 import { InMemoryUserStore } from "@user/adapters/user_store/in_memory";
 import { sendUserDomainError } from "./client-error";
 import { loginUserProvider, loginUserRequestSchema } from "@user/usecase/login";
@@ -24,6 +24,8 @@ export const main = () => {
   app.use(bodyParser.urlencoded({ extended: true }));
 
   app.use(morgan("dev"));
+
+  app.use(contextResolver(jwtTokenService));
 
   app.get("/health", (_, res) => {
     res.status(200).send();
@@ -54,6 +56,7 @@ export const main = () => {
         .status(200)
         .send();
     } else {
+      res.clearCookie("access-token");
       sendUserDomainError(res, result.error);
     }
   });
