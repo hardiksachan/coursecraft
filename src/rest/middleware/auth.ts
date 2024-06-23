@@ -14,7 +14,7 @@ export const requiresAuth =
     }
   };
 
-export const requiresAuthPriviliges =
+export const requiresAdminPriviliges =
   () => (req: Request, res: Response, next: NextFunction) => {
     if (req.ctx.user && req.ctx.user.role === "admin") {
       next();

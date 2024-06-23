@@ -46,7 +46,7 @@ export const authRouter = (
     }
   });
 
-  router.post("/logout", async (req, res) => {
+  router.post("/logout", async (_, res) => {
     res.clearCookie(ACCESS_TOKEN_COOKIE_KEY);
     res.status(200).send();
   });

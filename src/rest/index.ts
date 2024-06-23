@@ -12,6 +12,7 @@ import { authRouter } from "./routers";
 export const main = () => {
   const userStore = new InMemoryUserStore();
   const jwtTokenService = new JWT();
+
   const app = express();
 
   app.use(cookieParser());
