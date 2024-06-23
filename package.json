@@ -54,6 +54,7 @@
   },
   "_moduleAliases": {
     "@user": "dist/user",
-    "@common": "dist/common"
+    "@common": "dist/common",
+    "@course": "dist/course"
   }
 }
