@@ -4,7 +4,7 @@ import {
   internalServerError,
   sendClientError,
   validationError,
-} from "./client-error";
+} from "../client-error";
 
 export const errorMiddleware = (
   err: unknown,

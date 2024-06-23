@@ -6,7 +6,7 @@ import {
 import bodyParser from "body-parser";
 import express from "express";
 import morgan from "morgan";
-import { errorMiddleware } from "./middlewares";
+import { errorMiddleware } from "./middleware";
 import { InMemoryUserStore } from "@user/adapters/user_store/in_memory";
 import { sendUserDomainError } from "./client-error";
 import { loginUserProvider, loginUserRequestSchema } from "@user/usecase/login";
