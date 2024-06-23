@@ -53,16 +53,17 @@ export class PostgresCourseStore implements CourseStore {
   async getCourse(_ctx: Ctx, courseId: string): Promise<Result<Course>> {
     const course = await db
       .selectFrom("course")
-      .innerJoin("lesson", "course.course_id", "lesson.course_id")
+      .leftJoin("lesson", "course.course_id", "lesson.course_id")
       .select(({ fn, ref }) => [
-        "course_id",
-        "title",
-        "description",
-        "syllabus",
-        "instructor_name",
-        fn.count(ref("lesson_id")).as("lesson_count"),
+        "course.course_id",
+        "course.title",
+        "course.description",
+        "course.syllabus",
+        "course.instructor_name",
+        fn.count(ref("lesson.lesson_id")).as("lesson_count"),
       ])
-      .where("course_id", "=", courseId)
+      .where("course.course_id", "=", courseId)
+      .groupBy("course.course_id")
       .executeTakeFirst();
     if (!course) {
       return err(new CourseNotFoundError(courseId));
@@ -84,7 +85,7 @@ export class PostgresCourseStore implements CourseStore {
   async listCourses(_ctx: Ctx): Promise<Result<Course[]>> {
     const courses = await db
       .selectFrom("course")
-      .innerJoin("lesson", "course.course_id", "lesson.course_id")
+      .leftJoin("lesson", "course.course_id", "lesson.course_id")
       .select(({ fn, ref }) => [
         "course.course_id",
         "course.title",
@@ -93,7 +94,7 @@ export class PostgresCourseStore implements CourseStore {
         "course.instructor_name",
         fn.count(ref("lesson.lesson_id")).as("lesson_count"),
       ])
-      .groupBy("course_id")
+      .groupBy("course.course_id")
       .execute();
     return ok(
       courses.map((course) =>
@@ -225,6 +226,7 @@ export class PostgresCourseStore implements CourseStore {
             lessonId: lesson.lesson_id,
             title: lesson.title,
             type: lessonContentSchema.parse(lesson.content).type,
+            createdAt: lesson.created_at,
           }) as LessonPreview
       )
     );

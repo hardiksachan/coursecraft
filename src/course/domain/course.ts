@@ -45,6 +45,7 @@ export const lessonPreviewSchema = z.object({
   lessonId: z.string(),
   title: titleSchema,
   type: z.enum(["text", "video"]),
+  createdAt: z.coerce.date(),
 });
 
 export type LessonPreview = z.infer<typeof lessonPreviewSchema>;
@@ -52,7 +53,7 @@ export type LessonPreview = z.infer<typeof lessonPreviewSchema>;
 export const courseSchema = z.object({
   courseId: z.string(),
   details: courseDetailsSchema,
-  lessonCount: z.number(),
+  lessonCount: z.coerce.number(),
 });
 
 export type Course = z.infer<typeof courseSchema>;
