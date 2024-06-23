@@ -1,9 +1,9 @@
 import { Result as BaseResult } from "@common/result";
 
 export class UnexpectedError extends Error {
-  cause: Error;
+  cause: unknown;
 
-  constructor(cause: Error) {
+  constructor(cause: unknown) {
     super("unexpected error");
 
     this.cause = cause;

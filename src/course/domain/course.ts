@@ -15,18 +15,20 @@ export const courseDetailsSchema = z.object({
 
 export type CourseDetails = z.infer<typeof courseDetailsSchema>;
 
+export const lessonContentSchema = z.discriminatedUnion("type", [
+  z.object({
+    type: z.literal("text"),
+    body: z.string(),
+  }),
+  z.object({
+    type: z.literal("video"),
+    url: z.string().url(),
+  }),
+]);
+
 export const lessonDetailsSchema = z.object({
   title: titleSchema,
-  content: z.discriminatedUnion("type", [
-    z.object({
-      type: z.literal("text"),
-      body: z.string(),
-    }),
-    z.object({
-      type: z.literal("video"),
-      url: z.string().url(),
-    }),
-  ]),
+  content: lessonContentSchema,
 });
 
 export type LessonDetails = z.infer<typeof lessonDetailsSchema>;

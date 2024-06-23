@@ -3,19 +3,18 @@ import bodyParser from "body-parser";
 import express from "express";
 import morgan from "morgan";
 import { contextResolver, errorMiddleware, requiresAuth } from "./middleware";
-import { InMemoryUserStore } from "@user/adapters/user_store/in_memory";
 import cookieParser from "cookie-parser";
 import { config } from "@common/config";
 import { JWT } from "@common/token";
 import { authRouter, coursesRouter } from "./routers";
-import { InMemoryCourseStore } from "@course/adapters/course_store/in_memory";
 import { PostgresUserStore } from "@user/adapters/user_store/postgres";
+import { PostgresCourseStore } from "@course/adapters/course_store/postgres";
 
 export const main = () => {
   const userStore = new PostgresUserStore();
   const jwtTokenService = new JWT();
 
-  const coursesStore = new InMemoryCourseStore();
+  const coursesStore = new PostgresCourseStore();
 
   const app = express();
 

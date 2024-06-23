@@ -7,7 +7,6 @@ import {
   LessonDetails,
   lessonSchema,
   LessonPreview,
-  lessonPreviewSchema,
 } from "@course/domain";
 import {
   CourseNotFoundError,
