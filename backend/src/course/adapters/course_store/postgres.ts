@@ -46,58 +46,31 @@ export class PostgresCourseStore implements CourseStore {
         })
       );
     } catch (error: any) {
+      console.error("[PostgresCourseStore.createCourse]", error);
       return err(new UnexpectedError(error));
     }
   }
 
   async getCourse(_ctx: Ctx, courseId: string): Promise<Result<Course>> {
-    const course = await db
-      .selectFrom("course")
-      .leftJoin("lesson", "course.course_id", "lesson.course_id")
-      .select(({ fn, ref }) => [
-        "course.course_id",
-        "course.title",
-        "course.description",
-        "course.syllabus",
-        "course.instructor_name",
-        fn.count(ref("lesson.lesson_id")).as("lesson_count"),
-      ])
-      .where("course.course_id", "=", courseId)
-      .groupBy("course.course_id")
-      .executeTakeFirst();
-    if (!course) {
-      return err(new CourseNotFoundError(courseId));
-    }
-    return ok(
-      courseSchema.parse({
-        courseId: course.course_id,
-        details: {
-          title: course.title,
-          description: course.description,
-          syllabus: course.syllabus,
-          instructorName: course.instructor_name,
-        },
-        lessonCount: course.lesson_count,
-      })
-    );
-  }
-
-  async listCourses(_ctx: Ctx): Promise<Result<Course[]>> {
-    const courses = await db
-      .selectFrom("course")
-      .leftJoin("lesson", "course.course_id", "lesson.course_id")
-      .select(({ fn, ref }) => [
-        "course.course_id",
-        "course.title",
-        "course.description",
-        "course.syllabus",
-        "course.instructor_name",
-        fn.count(ref("lesson.lesson_id")).as("lesson_count"),
-      ])
-      .groupBy("course.course_id")
-      .execute();
-    return ok(
-      courses.map((course) =>
+    try {
+      const course = await db
+        .selectFrom("course")
+        .leftJoin("lesson", "course.course_id", "lesson.course_id")
+        .select(({ fn, ref }) => [
+          "course.course_id",
+          "course.title",
+          "course.description",
+          "course.syllabus",
+          "course.instructor_name",
+          fn.count(ref("lesson.lesson_id")).as("lesson_count"),
+        ])
+        .where("course.course_id", "=", courseId)
+        .groupBy("course.course_id")
+        .executeTakeFirst();
+      if (!course) {
+        return err(new CourseNotFoundError(courseId));
+      }
+      return ok(
         courseSchema.parse({
           courseId: course.course_id,
           details: {
@@ -108,8 +81,46 @@ export class PostgresCourseStore implements CourseStore {
           },
           lessonCount: course.lesson_count,
         })
-      )
-    );
+      );
+    } catch (error: any) {
+      console.error("[PostgresCourseStore.getCourse]", error);
+      return err(new UnexpectedError(error));
+    }
+  }
+
+  async listCourses(_ctx: Ctx): Promise<Result<Course[]>> {
+    try {
+      const courses = await db
+        .selectFrom("course")
+        .leftJoin("lesson", "course.course_id", "lesson.course_id")
+        .select(({ fn, ref }) => [
+          "course.course_id",
+          "course.title",
+          "course.description",
+          "course.syllabus",
+          "course.instructor_name",
+          fn.count(ref("lesson.lesson_id")).as("lesson_count"),
+        ])
+        .groupBy("course.course_id")
+        .execute();
+      return ok(
+        courses.map((course) =>
+          courseSchema.parse({
+            courseId: course.course_id,
+            details: {
+              title: course.title,
+              description: course.description,
+              syllabus: course.syllabus,
+              instructorName: course.instructor_name,
+            },
+            lessonCount: course.lesson_count,
+          })
+        )
+      );
+    } catch (error: any) {
+      console.error("[PostgresCourseStore.listCourses]", error);
+      return err(new UnexpectedError(error));
+    }
   }
 
   async updateCourse(
@@ -133,6 +144,7 @@ export class PostgresCourseStore implements CourseStore {
       }
       return this.getCourse(_ctx, courseId);
     } catch (error: any) {
+      console.error("[PostgresCourseStore.updateCourse]", error);
       return err(new UnexpectedError(error));
     }
   }
@@ -148,6 +160,7 @@ export class PostgresCourseStore implements CourseStore {
       }
       return ok(unit());
     } catch (error: any) {
+      console.error("[PostgresCourseStore.deleteCourse]", error);
       return err(new UnexpectedError(error));
     }
   }
@@ -180,6 +193,7 @@ export class PostgresCourseStore implements CourseStore {
         })
       );
     } catch (error: any) {
+      console.error("[PostgresCourseStore.createLesson]", error);
       return err(new UnexpectedError(error));
     }
   }
@@ -189,47 +203,57 @@ export class PostgresCourseStore implements CourseStore {
     courseId: string,
     lessonId: string
   ): Promise<Result<Lesson>> {
-    const lesson = await db
-      .selectFrom("lesson")
-      .select(["title", "content", "created_at"])
-      .where("course_id", "=", courseId)
-      .where("lesson_id", "=", lessonId)
-      .executeTakeFirst();
-    if (!lesson) {
-      return err(new CourseNotFoundError(courseId));
+    try {
+      const lesson = await db
+        .selectFrom("lesson")
+        .select(["title", "content", "created_at"])
+        .where("course_id", "=", courseId)
+        .where("lesson_id", "=", lessonId)
+        .executeTakeFirst();
+      if (!lesson) {
+        return err(new CourseNotFoundError(courseId));
+      }
+      return ok(
+        lessonSchema.parse({
+          lessonId,
+          details: {
+            title: lesson.title,
+            content: lesson.content,
+          },
+          createdAt: lesson.created_at,
+        })
+      );
+    } catch (error: any) {
+      console.error("[PostgresCourseStore.getLesson]", error);
+      return err(new UnexpectedError(error));
     }
-    return ok(
-      lessonSchema.parse({
-        lessonId,
-        details: {
-          title: lesson.title,
-          content: lesson.content,
-        },
-        createdAt: lesson.created_at,
-      })
-    );
   }
 
   async listLessons(
     _ctx: Ctx,
     courseId: string
   ): Promise<Result<LessonPreview[]>> {
-    const lessons = await db
-      .selectFrom("lesson")
-      .select(["lesson_id", "title", "content", "created_at"])
-      .where("course_id", "=", courseId)
-      .execute();
-    return ok(
-      lessons.map(
-        (lesson) =>
-          ({
-            lessonId: lesson.lesson_id,
-            title: lesson.title,
-            type: lessonContentSchema.parse(lesson.content).type,
-            createdAt: lesson.created_at,
-          }) as LessonPreview
-      )
-    );
+    try {
+      const lessons = await db
+        .selectFrom("lesson")
+        .select(["lesson_id", "title", "content", "created_at"])
+        .where("course_id", "=", courseId)
+        .execute();
+      return ok(
+        lessons.map(
+          (lesson) =>
+            ({
+              lessonId: lesson.lesson_id,
+              title: lesson.title,
+              type: lessonContentSchema.parse(lesson.content).type,
+              createdAt: lesson.created_at,
+            }) as LessonPreview
+        )
+      );
+    } catch (error: any) {
+      console.error("[PostgresCourseStore.listLessons]", error);
+      return err(new UnexpectedError(error));
+    }
   }
 
   async updateLesson(
@@ -259,6 +283,7 @@ export class PostgresCourseStore implements CourseStore {
         })
       );
     } catch (error: any) {
+      console.error("[PostgresCourseStore.updateLesson]", error);
       return err(new UnexpectedError(error));
     }
   }
@@ -280,6 +305,7 @@ export class PostgresCourseStore implements CourseStore {
       }
       return ok(unit());
     } catch (error: any) {
+      console.error("[PostgresCourseStore.deleteLesson]", error);
       return err(new UnexpectedError(error));
     }
   }

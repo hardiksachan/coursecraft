@@ -61,6 +61,7 @@ export const validationError = (err: ZodError) => {
 };
 
 export const fromUserDomainError = (error: UserError) => {
+  console.warn("fromUserDomainError", error);
   if (error instanceof EmailAlreadyInUseError) {
     return {
       httpStatus: 409,
@@ -95,6 +96,7 @@ export const sendUserDomainError = (res: Response, error: UserError) =>
   sendClientError(res, fromUserDomainError(error));
 
 export const fromCourseDomainError = (error: any) => {
+  console.warn("fromCourseDomainError", error);
   if (error instanceof CourseNotFoundError) {
     return {
       httpStatus: 404,

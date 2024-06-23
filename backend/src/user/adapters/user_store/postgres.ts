@@ -37,6 +37,7 @@ export class PostgresUserStore implements UserStore {
         // unique_violation
         return err(new EmailAlreadyInUseError(profile.email));
       }
+      console.error("[PostgresUserStore.createUser]", error);
       return err(new UnexpectedError(error));
     }
   }
@@ -59,7 +60,7 @@ export class PostgresUserStore implements UserStore {
       });
       return ok(credential);
     } catch (error: unknown) {
-      console.log(error);
+      console.error("[PostgresUserStore.getSavedCredentials]", error);
       return err(new UnexpectedError(error));
     }
   }
@@ -84,7 +85,7 @@ export class PostgresUserStore implements UserStore {
       });
       return ok(profile);
     } catch (error: unknown) {
-      console.log(error);
+      console.error("[PostgresUserStore.getProfileByEmail]", error);
       return err(new UnexpectedError(error));
     }
   }

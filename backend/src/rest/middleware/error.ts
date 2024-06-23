@@ -12,8 +12,7 @@ export const errorMiddleware = (
   res: Response,
   _next: NextFunction
 ) => {
-  console.log("An error occured");
-  console.log(err);
+  console.error("[errorMiddleware]", err);
   if (err instanceof ZodError) {
     sendClientError(res, validationError(err));
   } else {
