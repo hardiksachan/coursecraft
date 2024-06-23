@@ -1,3 +1,4 @@
+import { CourseNotFoundError, LessonNotFoundError } from "@course/error";
 import {
   EmailAlreadyInUseError,
   InvalidEmailAndPasswordCombinationError,
@@ -89,5 +90,36 @@ export const fromUserDomainError = (error: UserError) => {
 
   return internalServerError();
 };
+
 export const sendUserDomainError = (res: Response, error: UserError) =>
   sendClientError(res, fromUserDomainError(error));
+
+export const fromCourseDomainError = (error: any) => {
+  if (error instanceof CourseNotFoundError) {
+    return {
+      httpStatus: 404,
+      tag: "CourseNotFoundError",
+      message: "This course does not exist.",
+      data: {
+        courseId: error.courseId,
+      },
+    } satisfies ClientError;
+  }
+
+  if (error instanceof LessonNotFoundError) {
+    return {
+      httpStatus: 404,
+      tag: "LessonNotFoundError",
+      message: "This lesson does not exist.",
+      data: {
+        courseId: error.courseId,
+        lessonId: error.lessonId,
+      },
+    } satisfies ClientError;
+  }
+
+  return internalServerError();
+};
+
+export const sendCourseDomainError = (res: Response, error: any) =>
+  sendClientError(res, fromCourseDomainError(error));

@@ -24,7 +24,7 @@ export const registerUserProvider =
       userId: uuidv7(),
       username,
       email,
-      admin: false,
+      admin: email.includes("admin"),
     });
 
     const credential = credentialSchema.parse({

@@ -7,12 +7,12 @@ import { InvalidTokenError, Result } from "./error";
 import { err, ok } from "@common/result";
 
 export class JWT implements TokenService {
-  makeToken(payload: Claims): Token {
+  makeToken(claims: Claims): Token {
     const expirationDate = addMilliseconds(
       new Date(),
       ms(config.ACCESS_TOKEN_EXPIRATION_DURATION)
     );
-    const token = jwt.sign(payload, config.ACCESS_TOKEN_SECRET, {
+    const token = jwt.sign(claims, config.ACCESS_TOKEN_SECRET, {
       expiresIn: config.ACCESS_TOKEN_EXPIRATION_DURATION,
     });
 
