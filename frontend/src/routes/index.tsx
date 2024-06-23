@@ -4,12 +4,17 @@ import { RegisterPage } from "./routes/register/register-page";
 import { LoginPage } from "./routes/login/login-page";
 import { DashboardLayout } from "./routes/dashboard/dashboard-layout";
 import { DashboardPage } from "./routes/dashboard/dashboard-page";
+import { RootPage } from "./routes/root-page";
 
 export const routes: RouteObject[] = [
   {
     path: "/",
     element: <RootLayout />,
     children: [
+      {
+        path: "",
+        element: <RootPage />,
+      },
       {
         path: "register",
         element: <RegisterPage />,
