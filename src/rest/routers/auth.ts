@@ -12,7 +12,7 @@ import { ACCESS_TOKEN_COOKIE_KEY } from "@common/constants";
 
 export const authRouter = (
   userStore: UserStore,
-  tokenService: TokenService,
+  tokenService: TokenService
 ) => {
   const router = express.Router();
 

@@ -41,6 +41,6 @@ export const loginUserProvider =
     return ok(
       loginUserResponseSchema.parse({
         accessToken,
-      }),
+      })
     );
   };

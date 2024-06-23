@@ -10,7 +10,7 @@ export const errorMiddleware = (
   err: unknown,
   _req: Request,
   res: Response,
-  _next: NextFunction,
+  _next: NextFunction
 ) => {
   if (err instanceof ZodError) {
     sendClientError(res, validationError(err));

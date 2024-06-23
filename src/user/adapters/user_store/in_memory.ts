@@ -16,7 +16,7 @@ export class InMemoryUserStore implements UserStore {
 
   async createUser(
     profile: Profile,
-    credential: Credential,
+    credential: Credential
   ): Promise<Result<Unit>> {
     if (this.users.find(({ email }) => email === profile.email)) {
       return err(new EmailAlreadyInUseError(profile.email));

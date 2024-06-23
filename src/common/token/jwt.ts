@@ -10,7 +10,7 @@ export class JWT implements TokenService {
   makeToken(payload: Claims): Token {
     const expirationDate = addMilliseconds(
       new Date(),
-      ms(config.ACCESS_TOKEN_EXPIRATION_DURATION),
+      ms(config.ACCESS_TOKEN_EXPIRATION_DURATION)
     );
     const token = jwt.sign(payload, config.ACCESS_TOKEN_SECRET, {
       expiresIn: config.ACCESS_TOKEN_EXPIRATION_DURATION,
