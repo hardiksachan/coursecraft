@@ -14,12 +14,13 @@ import { Input } from "../../../components/ui/input";
 import { Button } from "../../../components/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  registerUserRequestSchema,
+  useRegisterUser,
+} from "../../../api/user-register";
 
-const registerFormSchema = z.object({
-  username: z.string().email(),
-  email: z.string().email(),
-  password: z.string().min(6),
-  confirmPassword: z.string().min(6),
+const registerFormSchema = registerUserRequestSchema.extend({
+  confirmPassword: z.string(),
 });
 
 const RegistrationForm = () => {
@@ -33,9 +34,15 @@ const RegistrationForm = () => {
       confirmPassword: "",
     },
   });
+
+  const { mutate, isPending } = useRegisterUser();
+
   return (
     <Form {...form}>
-      <form className="flex flex-col gap-y-2 min-w-2xl">
+      <form
+        className="flex flex-col gap-y-2 min-w-2xl"
+        onSubmit={form.handleSubmit((data) => mutate(data))}
+      >
         <FormField
           control={form.control}
           name="username"
@@ -72,11 +79,11 @@ const RegistrationForm = () => {
                 <Input placeholder="" type="password" {...field} />
               </FormControl>
               <FormMessage>
-                {/*<FormDescription>
+                <FormDescription>
                   Password must contain at least one uppercase letter, one
                   lowercase letter, and one number. And be at least 8 characters
                   long.
-                </FormDescription>*/}
+                </FormDescription>
               </FormMessage>
             </FormItem>
           )}
@@ -98,7 +105,7 @@ const RegistrationForm = () => {
         />
 
         <div>
-          <Button isLoading={status === "executing"} type="submit">
+          <Button isLoading={isPending} type="submit">
             Sign Up
           </Button>
         </div>
@@ -110,7 +117,7 @@ const RegistrationForm = () => {
 export const RegisterPage = () => {
   return (
     <div className="flex items-center justify-center min-h-screen">
-      <div className="min-w-[40vw] ">
+      <div className="min-w-[35vw] ">
         <div className="mb-2 space-y-1">
           <h1 className="text-3xl font-semibold text-start">Course Crafters</h1>
           <p className="text-xs text-start text-muted-foreground">

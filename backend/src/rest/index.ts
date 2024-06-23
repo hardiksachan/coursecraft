@@ -1,5 +1,6 @@
 import "express-async-errors";
 import bodyParser from "body-parser";
+import cors from "cors";
 import express from "express";
 import morgan from "morgan";
 import { contextResolver, errorMiddleware, requiresAuth } from "./middleware";
@@ -17,6 +18,8 @@ export const main = () => {
   const coursesStore = new PostgresCourseStore();
 
   const app = express();
+
+  app.use(cors());
 
   app.use(cookieParser());
   app.use(bodyParser.json());
