@@ -45,10 +45,12 @@ export const lessonPreviewSchema = z.object({
   type: z.enum(["text", "video"]),
 });
 
+export type LessonPreview = z.infer<typeof lessonPreviewSchema>;
+
 export const courseSchema = z.object({
   courseId: z.string(),
   details: courseDetailsSchema,
-  lessons: z.array(lessonPreviewSchema),
+  lessonCount: z.number(),
 });
 
 export type Course = z.infer<typeof courseSchema>;

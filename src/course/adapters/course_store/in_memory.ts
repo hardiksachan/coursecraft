@@ -1,6 +1,19 @@
 import { unit, Unit } from "@common/unit";
-import { CourseDetails, Course, courseSchema, Lesson } from "@course/domain";
-import { CourseNotFoundError, Result } from "@course/error";
+import {
+  CourseDetails,
+  Course,
+  courseSchema,
+  Lesson,
+  LessonDetails,
+  lessonSchema,
+  LessonPreview,
+  lessonPreviewSchema,
+} from "@course/domain";
+import {
+  CourseNotFoundError,
+  LessonNotFoundError,
+  Result,
+} from "@course/error";
 import { CourseStore } from "@course/ports";
 import { err, ok } from "@common/result";
 import { Ctx } from "@common/ctx";
@@ -29,7 +42,7 @@ export class InMemoryCourseStore implements CourseStore {
       courseSchema.parse({
         courseId,
         details: courseDetails,
-        lessons: [],
+        lessonCount: 0,
       })
     );
   }
@@ -43,11 +56,7 @@ export class InMemoryCourseStore implements CourseStore {
       courseSchema.parse({
         courseId: course.courseId,
         details: course.courseDetails,
-        lessons: course.lessons.map((lesson) => ({
-          lessonId: lesson.lessonId,
-          title: lesson.details.title,
-          type: lesson.details.content.type,
-        })),
+        lessonCount: course.lessons.length,
       })
     );
   }
@@ -58,11 +67,7 @@ export class InMemoryCourseStore implements CourseStore {
         courseSchema.parse({
           courseId: course.courseId,
           details: course.courseDetails,
-          lessons: course.lessons.map((lesson) => ({
-            lessonId: lesson.lessonId,
-            title: lesson.details.title,
-            type: lesson.details.content.type,
-          })),
+          lessonCount: course.lessons.length,
         })
       )
     );
@@ -82,11 +87,7 @@ export class InMemoryCourseStore implements CourseStore {
       courseSchema.parse({
         courseId: course.courseId,
         details: course.courseDetails,
-        lessons: course.lessons.map((lesson) => ({
-          lessonId: lesson.lessonId,
-          title: lesson.details.title,
-          type: lesson.details.content.type,
-        })),
+        lessonCount: course.lessons.length,
       })
     );
   }
@@ -97,6 +98,98 @@ export class InMemoryCourseStore implements CourseStore {
       return err(new CourseNotFoundError(courseId));
     }
     this.courses.splice(courseIndex, 1);
+    return ok(unit());
+  }
+
+  async createLesson(
+    _ctx: Ctx,
+    courseId: string,
+    lessonId: string,
+    lessonDetails: LessonDetails
+  ): Promise<Result<Lesson>> {
+    const course = this.courses.find((c) => c.courseId === courseId);
+    if (!course) {
+      return err(new CourseNotFoundError(courseId));
+    }
+    const lesson = {
+      lessonId,
+      details: lessonDetails,
+      createdAt: new Date(),
+    };
+    course.lessons.push(lesson);
+    return ok(lessonSchema.parse(lesson));
+  }
+
+  async getLesson(
+    _ctx: Ctx,
+    courseId: string,
+    lessonId: string
+  ): Promise<Result<Lesson>> {
+    const course = this.courses.find((c) => c.courseId === courseId);
+    if (!course) {
+      return err(new CourseNotFoundError(courseId));
+    }
+    const lesson = course.lessons.find((l) => l.lessonId === lessonId);
+    if (!lesson) {
+      return err(new LessonNotFoundError(courseId, lessonId));
+    }
+    return ok(lessonSchema.parse(lesson));
+  }
+
+  async listLessons(
+    _ctx: Ctx,
+    courseId: string
+  ): Promise<Result<LessonPreview[]>> {
+    const course = this.courses.find((c) => c.courseId === courseId);
+    if (!course) {
+      return err(new CourseNotFoundError(courseId));
+    }
+    return ok(
+      course.lessons.map(
+        (lesson) =>
+          ({
+            lessonId: lesson.lessonId,
+            title: lesson.details.title,
+            type: lesson.details.content.type,
+          }) as LessonPreview
+      )
+    );
+  }
+
+  async updateLesson(
+    _ctx: Ctx,
+    courseId: string,
+    lessonId: string,
+    lessonDetails: LessonDetails
+  ): Promise<Result<Lesson>> {
+    const course = this.courses.find((c) => c.courseId === courseId);
+    if (!course) {
+      return err(new CourseNotFoundError(courseId));
+    }
+    const lesson = course.lessons.find((l) => l.lessonId === lessonId);
+    if (!lesson) {
+      return err(new LessonNotFoundError(courseId, lessonId));
+    }
+    lesson.details = lessonDetails;
+    return ok(lessonSchema.parse(lesson));
+  }
+
+  async deleteLesson(
+    _ctx: Ctx,
+    courseId: string,
+    lessonId: string
+  ): Promise<Result<Unit>> {
+    const course = this.courses.find((c) => c.courseId === courseId);
+    if (!course) {
+      return err(new CourseNotFoundError(courseId));
+    }
+    const lessonIndex = course.lessons.findIndex(
+      (l) => l.lessonId === lessonId
+    );
+    if (lessonIndex === -1) {
+      return err(new LessonNotFoundError(courseId, lessonId));
+    }
+    course.lessons.splice(lessonIndex, 1);
     return ok(unit());
   }
 }
