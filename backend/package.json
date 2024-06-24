@@ -3,18 +3,22 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "rimraf dist && npx tsc",
+    "build": "rimraf dist && npx tsc && pnpm sentry:sourcemaps",
     "start": "node dist/index.js",
     "dev": "concurrently \"npx tsc -w\" \"nodemon --env-file=.env dist/index.js\"",
     "test": "jest --watchAll",
     "migrate:up": "./migrate_up.sh",
     "migrate:down": "./migrate_down.sh",
-    "introspect": "kysely-codegen"
+    "introspect": "kysely-codegen",
+    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org hardik-sachan --project node-express ./dist && sentry-cli sourcemaps upload --org hardik-sachan --project node-express ./dist"
   },
   "keywords": [],
   "author": "hardiksachan",
   "license": "MIT",
   "dependencies": {
+    "@sentry/cli": "^2.32.1",
+    "@sentry/node": "^8.11.0",
+    "@sentry/profiling-node": "^8.11.0",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",

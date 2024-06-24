@@ -16,6 +16,7 @@ import {
 import { PostgresUserStore } from "@user/adapters/user_store/postgres";
 import { PostgresCourseStore } from "@course/adapters/course_store/postgres";
 import { PostgresEnrollmentStore } from "@advisor/adapters/enrollments_store/postgres";
+import * as Sentry from "@sentry/node";
 
 export const main = () => {
   const userStore = new PostgresUserStore();
@@ -54,6 +55,7 @@ export const main = () => {
   app.use("/api/courses", coursesRouter(coursesStore));
   app.use("/api/enrollments", enrollmentsRouter(enrollmentsStore));
 
+  Sentry.setupExpressErrorHandler(app);
   app.use(errorMiddleware);
 
   app.listen(config.PORT, () => {
