@@ -59,6 +59,7 @@
     "@user": "dist/user",
     "@common": "dist/common",
     "@course": "dist/course",
+    "@advisor": "dist/advisor",
     "@postgres": "dist/postgres"
   }
 }

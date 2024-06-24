@@ -1,10 +1,10 @@
-import "express-async-errors";
 import express from "express";
 import { UserStore } from "@user/ports";
 import {
   getUserProfileProvider,
   userProfileRequestSchema,
 } from "@user/usecase/profile";
+import { sendUserDomainError } from "../client-error";
 
 export const userRouter = (userStore: UserStore) => {
   const router = express.Router();
@@ -18,7 +18,7 @@ export const userRouter = (userStore: UserStore) => {
     if (result.ok) {
       res.status(200).send(result.data);
     } else {
-      res.status(400).send(result.error);
+      sendUserDomainError(res, result.error);
     }
   });
 

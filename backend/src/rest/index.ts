@@ -7,15 +7,23 @@ import { contextResolver, errorMiddleware, requiresAuth } from "./middleware";
 import cookieParser from "cookie-parser";
 import { config } from "@common/config";
 import { JWT } from "@common/token";
-import { authRouter, coursesRouter, userRouter } from "./routers";
+import {
+  authRouter,
+  coursesRouter,
+  enrollmentsRouter,
+  userRouter,
+} from "./routers";
 import { PostgresUserStore } from "@user/adapters/user_store/postgres";
 import { PostgresCourseStore } from "@course/adapters/course_store/postgres";
+import { PostgresEnrollmentStore } from "@advisor/adapters/enrollments_store/postgres";
 
 export const main = () => {
   const userStore = new PostgresUserStore();
   const jwtTokenService = new JWT();
 
   const coursesStore = new PostgresCourseStore();
+
+  const enrollmentsStore = new PostgresEnrollmentStore();
 
   const app = express();
 
@@ -44,6 +52,7 @@ export const main = () => {
 
   app.use("/api/users", userRouter(userStore));
   app.use("/api/courses", coursesRouter(coursesStore));
+  app.use("/api/enrollments", enrollmentsRouter(enrollmentsStore));
 
   app.use(errorMiddleware);
 

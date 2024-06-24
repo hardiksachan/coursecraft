@@ -1,4 +1,9 @@
-import { CourseNotFoundError, LessonNotFoundError } from "@course/error";
+import {
+  CourseNotFoundError,
+  LessonNotFoundError,
+  Error as CourseError,
+} from "@course/error";
+import { Error as AdvisorError } from "@advisor/error";
 import {
   EmailAlreadyInUseError,
   InvalidEmailAndPasswordCombinationError,
@@ -95,7 +100,7 @@ export const fromUserDomainError = (error: UserError) => {
 export const sendUserDomainError = (res: Response, error: UserError) =>
   sendClientError(res, fromUserDomainError(error));
 
-export const fromCourseDomainError = (error: any) => {
+export const fromCourseDomainError = (error: CourseError) => {
   console.warn("fromCourseDomainError", error);
   if (error instanceof CourseNotFoundError) {
     return {
@@ -123,5 +128,13 @@ export const fromCourseDomainError = (error: any) => {
   return internalServerError();
 };
 
-export const sendCourseDomainError = (res: Response, error: any) =>
+export const sendCourseDomainError = (res: Response, error: CourseError) =>
   sendClientError(res, fromCourseDomainError(error));
+
+export const fromAdvisorDomainError = (error: AdvisorError) => {
+  console.warn("fromAdvisorDomainError", error);
+  return internalServerError();
+};
+
+export const sendAdvisorDomainError = (res: Response, error: AdvisorError) =>
+  sendClientError(res, fromAdvisorDomainError(error));
