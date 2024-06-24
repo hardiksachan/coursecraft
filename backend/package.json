@@ -10,7 +10,7 @@
     "migrate:up": "./migrate_up.sh",
     "migrate:down": "./migrate_down.sh",
     "introspect": "kysely-codegen",
-    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org hardik-sachan --project node-express ./dist && sentry-cli sourcemaps upload --org hardik-sachan --project node-express ./dist"
+    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org hardik-sachan --project coursecraft-backend ./dist && sentry-cli sourcemaps upload --org hardik-sachan --project coursecraft-backend ./dist"
   },
   "keywords": [],
   "author": "hardiksachan",
