@@ -12,5 +12,13 @@ export const DashboardPage = () => {
     return <div>Error: {JSON.stringify(user.error)}</div>;
   }
 
-  return <div>{JSON.stringify(user.data)}</div>;
+  return (
+    <button
+      onClick={() => {
+        throw new Error("I broke the world");
+      }}
+    >
+      Break the world
+    </button>
+  );
 };
