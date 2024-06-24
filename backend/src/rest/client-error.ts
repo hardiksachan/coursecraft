@@ -12,6 +12,7 @@ import {
 } from "@user/error";
 import { Response } from "express";
 import { ZodError } from "zod";
+import * as Sentry from "@sentry/node";
 
 export type ClientError = {
   httpStatus: number;
@@ -66,7 +67,6 @@ export const validationError = (err: ZodError) => {
 };
 
 export const fromUserDomainError = (error: UserError) => {
-  console.warn("fromUserDomainError", error);
   if (error instanceof EmailAlreadyInUseError) {
     return {
       httpStatus: 409,
@@ -94,6 +94,7 @@ export const fromUserDomainError = (error: UserError) => {
     } satisfies ClientError;
   }
 
+  Sentry.captureException(error);
   return internalServerError();
 };
 
@@ -101,7 +102,6 @@ export const sendUserDomainError = (res: Response, error: UserError) =>
   sendClientError(res, fromUserDomainError(error));
 
 export const fromCourseDomainError = (error: CourseError) => {
-  console.warn("fromCourseDomainError", error);
   if (error instanceof CourseNotFoundError) {
     return {
       httpStatus: 404,
@@ -125,6 +125,7 @@ export const fromCourseDomainError = (error: CourseError) => {
     } satisfies ClientError;
   }
 
+  Sentry.captureException(error);
   return internalServerError();
 };
 
@@ -132,7 +133,7 @@ export const sendCourseDomainError = (res: Response, error: CourseError) =>
   sendClientError(res, fromCourseDomainError(error));
 
 export const fromAdvisorDomainError = (error: AdvisorError) => {
-  console.warn("fromAdvisorDomainError", error);
+  Sentry.captureException(error);
   return internalServerError();
 };
 

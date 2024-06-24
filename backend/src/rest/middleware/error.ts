@@ -5,6 +5,7 @@ import {
   sendClientError,
   validationError,
 } from "../client-error";
+import * as Sentry from "@sentry/node";
 
 export const errorMiddleware = (
   err: unknown,
@@ -12,10 +13,10 @@ export const errorMiddleware = (
   res: Response,
   _next: NextFunction
 ) => {
-  console.error("[errorMiddleware]", err);
   if (err instanceof ZodError) {
     sendClientError(res, validationError(err));
   } else {
+    Sentry.captureException(err);
     sendClientError(res, internalServerError());
   }
 };

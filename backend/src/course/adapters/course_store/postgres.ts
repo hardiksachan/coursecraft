@@ -46,7 +46,6 @@ export class PostgresCourseStore implements CourseStore {
         })
       );
     } catch (error: any) {
-      console.error("[PostgresCourseStore.createCourse]", error);
       return err(new UnexpectedError(error));
     }
   }
@@ -83,7 +82,6 @@ export class PostgresCourseStore implements CourseStore {
         })
       );
     } catch (error: any) {
-      console.error("[PostgresCourseStore.getCourse]", error);
       return err(new UnexpectedError(error));
     }
   }
@@ -118,7 +116,6 @@ export class PostgresCourseStore implements CourseStore {
         )
       );
     } catch (error: any) {
-      console.error("[PostgresCourseStore.listCourses]", error);
       return err(new UnexpectedError(error));
     }
   }
@@ -144,7 +141,6 @@ export class PostgresCourseStore implements CourseStore {
       }
       return this.getCourse(_ctx, courseId);
     } catch (error: any) {
-      console.error("[PostgresCourseStore.updateCourse]", error);
       return err(new UnexpectedError(error));
     }
   }
@@ -160,7 +156,6 @@ export class PostgresCourseStore implements CourseStore {
       }
       return ok(unit());
     } catch (error: any) {
-      console.error("[PostgresCourseStore.deleteCourse]", error);
       return err(new UnexpectedError(error));
     }
   }
@@ -193,7 +188,6 @@ export class PostgresCourseStore implements CourseStore {
         })
       );
     } catch (error: any) {
-      console.error("[PostgresCourseStore.createLesson]", error);
       return err(new UnexpectedError(error));
     }
   }
@@ -224,7 +218,6 @@ export class PostgresCourseStore implements CourseStore {
         })
       );
     } catch (error: any) {
-      console.error("[PostgresCourseStore.getLesson]", error);
       return err(new UnexpectedError(error));
     }
   }
@@ -251,7 +244,6 @@ export class PostgresCourseStore implements CourseStore {
         )
       );
     } catch (error: any) {
-      console.error("[PostgresCourseStore.listLessons]", error);
       return err(new UnexpectedError(error));
     }
   }
@@ -283,7 +275,6 @@ export class PostgresCourseStore implements CourseStore {
         })
       );
     } catch (error: any) {
-      console.error("[PostgresCourseStore.updateLesson]", error);
       return err(new UnexpectedError(error));
     }
   }
@@ -305,7 +296,6 @@ export class PostgresCourseStore implements CourseStore {
       }
       return ok(unit());
     } catch (error: any) {
-      console.error("[PostgresCourseStore.deleteLesson]", error);
       return err(new UnexpectedError(error));
     }
   }

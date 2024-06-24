@@ -20,7 +20,6 @@ export class PostgresEnrollmentStore implements EnrollmentStore {
         )
       );
     } catch (error: any) {
-      console.error("[PostgresEnrollmentStore.getEnrollmentsForUser]", error);
       return err(new UnexpectedError(error));
     }
   }
@@ -36,7 +35,6 @@ export class PostgresEnrollmentStore implements EnrollmentStore {
         .execute();
       return ok(unit());
     } catch (error: any) {
-      console.error("[PostgresEnrollmentStore.addEnrollment]", error);
       return err(new UnexpectedError(error));
     }
   }

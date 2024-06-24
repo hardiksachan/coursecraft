@@ -105,12 +105,10 @@ export const coursesRouter = (courseStore: CourseStore) => {
     "/:courseId/lessons",
     requiresAdminPriviliges(),
     async (req, res) => {
-      console.log("Creating lesson");
       const createLessonRequest = createLessonRequestSchema.parse({
         courseId: req.params.courseId,
         lessonDetails: req.body,
       });
-      console.log(createLessonRequest);
       const createLesson = createLessonProvider(courseStore);
       const result = await createLesson(req.ctx, createLessonRequest);
       if (result.ok) {
