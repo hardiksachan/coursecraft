@@ -34,7 +34,7 @@ export const enrollmentsRouter = (enrollmentsStore: EnrollmentStore) => {
     } else {
       sendAdvisorDomainError(res, result.error);
     }
-  }
+  });
 
   return router;
 };
