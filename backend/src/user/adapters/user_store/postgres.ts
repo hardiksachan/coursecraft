@@ -28,7 +28,7 @@ export class PostgresUserStore implements UserStore {
           username: profile.username,
           email: profile.email,
           admin: profile.admin,
-          password: credential.password,
+          password: credential.hashedPassword,
         })
         .execute();
       return ok(unit());
@@ -54,7 +54,7 @@ export class PostgresUserStore implements UserStore {
       }
 
       const credential = credentialSchema.parse({
-        password: row.password,
+        hashedPassword: row.password,
         email,
       });
       return ok(credential);

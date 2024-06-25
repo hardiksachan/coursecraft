@@ -1,4 +1,5 @@
 import { emailSchema, passwordSchema } from "@user/domain";
+import * as argon2 from "argon2";
 import { UserStore } from "@user/ports";
 import { z } from "zod";
 import { InvalidEmailAndPasswordCombinationError } from "@user/error";
@@ -25,8 +26,13 @@ export const loginUserProvider =
     const savedCredentialsResult = await store.getSavedCredentials(email);
     if (!savedCredentialsResult.ok) return err(savedCredentialsResult.error);
 
-    if (password !== savedCredentialsResult.data.password)
+    const passwordsMatch = await argon2.verify(
+      savedCredentialsResult.data.hashedPassword,
+      password
+    );
+    if (!passwordsMatch) {
       return err(new InvalidEmailAndPasswordCombinationError());
+    }
 
     const profileResult = await store.getProfileByEmail(email);
     if (!profileResult.ok) return err(profileResult.error);

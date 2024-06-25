@@ -1,10 +1,8 @@
-import { emailSchema, passwordSchema, usernameSchema } from "@user/domain";
+import { emailSchema, usernameSchema } from "@user/domain";
 import { UserStore } from "@user/ports";
 import { z } from "zod";
-import { InvalidEmailAndPasswordCombinationError } from "@user/error";
 import { err } from "@common/result";
 import { ok } from "@common/result";
-import { tokenSchema, TokenService } from "@common/token";
 
 export const userProfileRequestSchema = z.object({
   userId: z.string(),

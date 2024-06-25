@@ -1,9 +1,9 @@
 import { z } from "zod";
-import { emailSchema, passwordSchema } from "./value_objects";
+import { emailSchema, hashedPasswordSchema } from "./value_objects";
 
 export const credentialSchema = z.object({
   email: emailSchema,
-  password: passwordSchema,
+  hashedPassword: hashedPasswordSchema,
 });
 
 export type Credential = z.infer<typeof credentialSchema>;

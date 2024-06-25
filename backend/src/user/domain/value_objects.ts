@@ -20,3 +20,5 @@ export const passwordSchema = z
     message:
       "password must contain a lowercase letter, an uppercase letter and a special character",
   });
+
+export const hashedPasswordSchema = z.string();

@@ -1,4 +1,5 @@
 import { v7 as uuidv7 } from "uuid";
+import * as argon2 from "argon2";
 import {
   credentialSchema,
   emailSchema,
@@ -29,7 +30,7 @@ export const registerUserProvider =
 
     const credential = credentialSchema.parse({
       email,
-      password,
+      hashedPassword: await argon2.hash(password),
     });
 
     return store.createUser(profile, credential);
