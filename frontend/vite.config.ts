@@ -4,10 +4,14 @@ import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  plugins: [react(), sentryVitePlugin({
-    org: "hardik-sachan",
-    project: "coursecraft-frontend"
-  })],
+  plugins: [
+    react(),
+    sentryVitePlugin({
+      org: "hardik-sachan",
+      project: "coursecraft-frontend",
+      authToken: process.env.SENTRY_AUTH_TOKEN!,
+    }),
+  ],
 
   resolve: {
     alias: {
@@ -16,6 +20,6 @@ export default defineConfig({
   },
 
   build: {
-    sourcemap: true
-  }
+    sourcemap: true,
+  },
 });

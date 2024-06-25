@@ -1,4 +1,5 @@
 import { useCurrentUser } from "../../../api/use-current-user";
+import * as Sentry from "@sentry/react";
 
 export const DashboardPage = () => {
   const user = useCurrentUser();
@@ -15,7 +16,15 @@ export const DashboardPage = () => {
   return (
     <button
       onClick={() => {
-        throw new Error("I broke the world");
+        Sentry.startSpan(
+          {
+            name: "Example frontend span",
+            op: "test",
+          },
+          () => {
+            throw new Error("I broke the world");
+          },
+        );
       }}
     >
       Break the world
